@@ -34,10 +34,5 @@ public class EquipoController {
     @DeleteMapping("/{id}")
     public Mono<Void> delete(@PathVariable Integer id) { return service.delete(id); }
 }
-package com.example.teams.repository;
 
-import com.example.teams.model.Equipo;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-
-public interface EquipoRepository extends ReactiveCrudRepository<Equipo, Integer> {}
 
