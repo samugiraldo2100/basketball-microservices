@@ -13,11 +13,5 @@ public class EquipoRequests {
                         Integer championships) {}
 }
 
-                         Integer jerseyNumber,
-                         Integer equipoId) {}
-    public record Update(@NotBlank String fullName,
-                         @NotBlank String position,
-                         Integer jerseyNumber,
-                         Integer equipoId) {}
-}
+
 
