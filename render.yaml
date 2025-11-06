@@ -11,11 +11,11 @@ services:
     healthCheckPath: /actuator/health
     envVars:
       - key: R2DBC_URL
-        sync: false
+        value: r2dbc:postgresql://basketball_i2b9_user:TNQIEBerIK6MzJfPcPIaohAgyNqlT2dL@dpg-d46banjipnbc73bl8qt0-a.oregon-postgres.render.com:5432/basketball_i2b9?sslMode=require
       - key: DB_USER
-        sync: false
+        value: basketball_i2b9_user
       - key: DB_PASSWORD
-        sync: false
+        value: TNQIEBerIK6MzJfPcPIaohAgyNqlT2dL
 
   # Equipos Service
   - type: web
@@ -29,11 +29,11 @@ services:
     healthCheckPath: /actuator/health
     envVars:
       - key: R2DBC_URL
-        sync: false
+        value: r2dbc:postgresql://basketball_i2b9_user:TNQIEBerIK6MzJfPcPIaohAgyNqlT2dL@dpg-d46banjipnbc73bl8qt0-a.oregon-postgres.render.com:5432/basketball_i2b9?sslMode=require
       - key: DB_USER
-        sync: false
+        value: basketball_i2b9_user
       - key: DB_PASSWORD
-        sync: false
+        value: TNQIEBerIK6MzJfPcPIaohAgyNqlT2dL
 
   # API Gateway
   - type: web
@@ -50,3 +50,4 @@ services:
         sync: false
       - key: EQUIPOS_URI
         sync: false
+
