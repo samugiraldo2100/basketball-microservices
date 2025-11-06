@@ -1,0 +1,23 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: teams-service
+          uri: ${TEAMS_URI:http://localhost:8082}
+          predicates:
+            - Path=/api/teams/**
+        - id: players-service
+          uri: ${PLAYERS_URI:http://localhost:8081}
+          predicates:
+            - Path=/api/players/**
+      default-filters: []
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏀 Basketball API - Panel de Pruebas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+
+        .config-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .endpoint-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .endpoint-group h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .method-get { background: #28a745; color: white; }
+        .method-post { background: #007bff; color: white; }
+        .method-put { background: #ffc107; color: black; }
+        .method-delete { background: #dc3545; color: white; }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            margin: 10px 0;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .response-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .response-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #response {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .status-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏀 Basketball API</h1>
+        <p class="subtitle">Panel de Pruebas Interactivo</p>
+
+        <!-- Configuración -->
+        <div class="config-section">
+            <h3>⚙️ Configuración del API Gateway</h3>
+            <div class="input-group">
+                <label for="apiUrl">URL del API Gateway:</label>
+                <input type="text" id="apiUrl" placeholder="https://api-gateway-xxxx.onrender.com" value="">
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('jugadores')">🏃 Jugadores</button>
+            <button class="tab" onclick="showTab('equipos')">🏆 Equipos</button>
+        </div>
+
+        <!-- Tab Jugadores -->
+        <div id="jugadores" class="tab-content active">
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-get">GET</span> Obtener Todos los Jugadores</h4>
+                <button class="btn-primary" onclick="getJugadores()">Ejecutar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-get">GET</span> Obtener Jugadores por Equipo</h4>
+                <div class="input-group">
+                    <label>ID del Equipo:</label>
+                    <input type="number" id="equipoIdFilter" placeholder="1" value="1">
+                </div>
+                <button class="btn-primary" onclick="getJugadoresByEquipo()">Ejecutar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-get">GET</span> Obtener Jugador por ID</h4>
+                <div class="input-group">
+                    <label>ID del Jugador:</label>
+                    <input type="number" id="jugadorIdGet" placeholder="1" value="1">
+                </div>
+                <button class="btn-primary" onclick="getJugadorById()">Ejecutar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-post">POST</span> Crear Jugador</h4>
+                <textarea id="createJugadorBody" rows="8">{
+  "fullName": "Michael Jordan",
+  "position": "Shooting Guard",
+  "jerseyNumber": 23,
+  "equipoId": 1
+}</textarea>
+                <button class="btn-primary" onclick="createJugador()">Crear</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-put">PUT</span> Actualizar Jugador</h4>
+                <div class="input-group">
+                    <label>ID del Jugador a Actualizar:</label>
+                    <input type="number" id="jugadorIdUpdate" placeholder="1" value="1">
+                </div>
+                <textarea id="updateJugadorBody" rows="8">{
+  "fullName": "Michael Jeffrey Jordan",
+  "position": "Shooting Guard",
+  "jerseyNumber": 23,
+  "equipoId": 1
+}</textarea>
+                <button class="btn-primary" onclick="updateJugador()">Actualizar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-delete">DELETE</span> Eliminar Jugador</h4>
+                <div class="input-group">
+                    <label>ID del Jugador a Eliminar:</label>
+                    <input type="number" id="jugadorIdDelete" placeholder="1" value="">
+                </div>
+                <button class="btn-primary" onclick="deleteJugador()">Eliminar</button>
+            </div>
+        </div>
+
+        <!-- Tab Equipos -->
+        <div id="equipos" class="tab-content">
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-get">GET</span> Obtener Todos los Equipos</h4>
+                <button class="btn-primary" onclick="getEquipos()">Ejecutar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-get">GET</span> Obtener Equipo por ID</h4>
+                <div class="input-group">
+                    <label>ID del Equipo:</label>
+                    <input type="number" id="equipoIdGet" placeholder="1" value="1">
+                </div>
+                <button class="btn-primary" onclick="getEquipoById()">Ejecutar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-post">POST</span> Crear Equipo</h4>
+                <textarea id="createEquipoBody" rows="8">{
+  "name": "Chicago Bulls",
+  "city": "Chicago",
+  "conference": "Eastern",
+  "championships": 6
+}</textarea>
+                <button class="btn-primary" onclick="createEquipo()">Crear</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-put">PUT</span> Actualizar Equipo</h4>
+                <div class="input-group">
+                    <label>ID del Equipo a Actualizar:</label>
+                    <input type="number" id="equipoIdUpdate" placeholder="1" value="1">
+                </div>
+                <textarea id="updateEquipoBody" rows="8">{
+  "name": "Los Angeles Lakers",
+  "city": "Los Angeles",
+  "conference": "Western",
+  "championships": 18
+}</textarea>
+                <button class="btn-primary" onclick="updateEquipo()">Actualizar</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h4><span class="method-badge method-delete">DELETE</span> Eliminar Equipo</h4>
+                <div class="input-group">
+                    <label>ID del Equipo a Eliminar:</label>
+                    <input type="number" id="equipoIdDelete" placeholder="1" value="">
+                </div>
+                <button class="btn-primary" onclick="deleteEquipo()">Eliminar</button>
+            </div>
+        </div>
+
+        <!-- Respuesta -->
+        <div class="response-section">
+            <h3>📄 Respuesta del Servidor</h3>
+            <div id="response">Esperando petición...</div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function getApiUrl() {
+            const url = document.getElementById('apiUrl').value.trim();
+            if (!url) {
+                alert('Por favor, ingresa la URL del API Gateway');
+                return null;
+            }
+            return url;
+        }
+
+        function showResponse(data, status) {
+            const responseDiv = document.getElementById('response');
+            const statusClass = status >= 200 && status < 300 ? 'status-success' : 'status-error';
+            responseDiv.innerHTML = `<span class="${statusClass}">Status: ${status}</span>\n\n${JSON.stringify(data, null, 2)}`;
+        }
+
+        function showError(error) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = `<span class="status-error">Error:</span>\n\n${error}`;
+        }
+
+        // ========== JUGADORES ==========
+
+        async function getJugadores() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores`);
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function getJugadoresByEquipo() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const equipoId = document.getElementById('equipoIdFilter').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores?equipoId=${equipoId}`);
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function getJugadorById() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('jugadorIdGet').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores/${id}`);
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function createJugador() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const body = document.getElementById('createJugadorBody').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function updateJugador() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('jugadorIdUpdate').value;
+            const body = document.getElementById('updateJugadorBody').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function deleteJugador() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('jugadorIdDelete').value;
+
+            if (!confirm(`¿Estás seguro de eliminar el jugador ${id}?`)) return;
+
+            try {
+                const response = await fetch(`${baseUrl}/jugadores/${id}`, {
+                    method: 'DELETE'
+                });
+                showResponse({ message: 'Jugador eliminado correctamente' }, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // ========== EQUIPOS ==========
+
+        async function getEquipos() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+
+            try {
+                const response = await fetch(`${baseUrl}/equipos`);
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function getEquipoById() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('equipoIdGet').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/equipos/${id}`);
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function createEquipo() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const body = document.getElementById('createEquipoBody').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/equipos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function updateEquipo() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('equipoIdUpdate').value;
+            const body = document.getElementById('updateEquipoBody').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/equipos/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
+                const data = await response.json();
+                showResponse(data, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function deleteEquipo() {
+            const baseUrl = getApiUrl();
+            if (!baseUrl) return;
+            const id = document.getElementById('equipoIdDelete').value;
+
+            if (!confirm(`¿Estás seguro de eliminar el equipo ${id}?`)) return;
+
+            try {
+                const response = await fetch(`${baseUrl}/equipos/${id}`, {
+                    method: 'DELETE'
+                });
+                showResponse({ message: 'Equipo eliminado correctamente' }, response.status);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
+

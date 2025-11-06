@@ -1,0 +1,20 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: jugadores-service
+  r2dbc:
+    url: ${R2DBC_URL:r2dbc:postgresql://localhost:5432/basketballdb}
+    username: ${DB_USER:basketuser}
+    password: ${DB_PASSWORD:basketpass}
+  sql:
+    init:
+      mode: always
+      platform: postgresql
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

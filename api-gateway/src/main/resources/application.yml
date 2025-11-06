@@ -1,0 +1,63 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 10000  # 10s
+        response-timeout: 60s   # 60s
+      default-filters:
+        - name: Retry
+          args:
+            retries: 2
+            methods: GET
+            statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR
+      routes:
+        # Jugadores: acepta /api/jugadores/** (passthrough)
+        - id: jugadores-service-api
+          uri: ${JUGADORES_URI:http://localhost:8081}
+          predicates:
+            - Path=/api/jugadores/**
+        # Jugadores: acepta /jugadores/** y reescribe a /api/jugadores/**
+        - id: jugadores-service-noapi
+          uri: ${JUGADORES_URI:http://localhost:8081}
+          predicates:
+            - Path=/jugadores/**
+          filters:
+            - RewritePath=/jugadores/(?<segment>.*), /api/jugadores/${segment}
+        # Jugadores: acepta /jugadores exacto y lo envía a /api/jugadores
+        - id: jugadores-service-root
+          uri: ${JUGADORES_URI:http://localhost:8081}
+          predicates:
+            - Path=/jugadores
+          filters:
+            - SetPath=/api/jugadores
+        # Equipos: acepta /api/equipos/** (passthrough)
+        - id: equipos-service-api
+          uri: ${EQUIPOS_URI:http://localhost:8082}
+          predicates:
+            - Path=/api/equipos/**
+        # Equipos: acepta /equipos/** y reescribe a /api/equipos/**
+        - id: equipos-service-noapi
+          uri: ${EQUIPOS_URI:http://localhost:8082}
+          predicates:
+            - Path=/equipos/**
+          filters:
+            - RewritePath=/equipos/(?<segment>.*), /api/equipos/${segment}
+        # Equipos: acepta /equipos exacto y lo envía a /api/equipos
+        - id: equipos-service-root
+          uri: ${EQUIPOS_URI:http://localhost:8082}
+          predicates:
+            - Path=/equipos
+          filters:
+            - SetPath=/api/equipos
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+

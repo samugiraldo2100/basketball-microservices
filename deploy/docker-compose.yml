@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: basketballdb
+      POSTGRES_USER: basketuser
+      POSTGRES_PASSWORD: basketpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U basketuser -d basketballdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  equipos-service:
+    build: ../equipos-service
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/basketballdb
+      SPRING_R2DBC_USERNAME: basketuser
+      SPRING_R2DBC_PASSWORD: basketpass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD","wget","-qO-","http://localhost:8082/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  jugadores-service:
+    build: ../jugadores-service
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/basketballdb
+      SPRING_R2DBC_USERNAME: basketuser
+      SPRING_R2DBC_PASSWORD: basketpass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD","wget","-qO-","http://localhost:8081/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api-gateway:
+    build: ../api-gateway
+    environment:
+      EQUIPOS_URI: http://equipos-service:8082
+      JUGADORES_URI: http://jugadores-service:8081
+    depends_on:
+      equipos-service:
+        condition: service_healthy
+      jugadores-service:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
+      players-service:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

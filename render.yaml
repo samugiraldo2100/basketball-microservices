@@ -1,0 +1,52 @@
+services:
+  # Jugadores Service
+  - type: web
+    name: jugadores-service
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./jugadores-service/Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: R2DBC_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # Equipos Service
+  - type: web
+    name: equipos-service
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./equipos-service/Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: R2DBC_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # API Gateway
+  - type: web
+    name: api-gateway
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./api-gateway/Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JUGADORES_URI
+        sync: false
+      - key: EQUIPOS_URI
+        sync: false
